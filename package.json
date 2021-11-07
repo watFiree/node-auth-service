@@ -1,10 +1,11 @@
 {
-  "name": "kodowanie",
+  "name": "auth-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "start": "nodemon server.ts",
     "build": "tsc"
   },

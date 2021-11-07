@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-const JWT_SECRET = process.env.jwt_secret || "";
+const JWT_SECRET = process.env.JWT_SECRET_KEY || "";
 
 export const createToken = async (
   data: object,

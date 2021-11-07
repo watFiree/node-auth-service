@@ -1,23 +1,26 @@
 import mongoose from "mongoose";
 import chalk from "chalk";
 
-export function connectToDatabase(databaseName?: string) {
+const connectToDatabase = new Promise((resolve, reject) => {
   const db = mongoose.connection;
+  console.log(chalk.yellow("Connecting to MongoDB..."));
 
-  mongoose.connect(process.env.mongodb_uri, {
+  db.openUri(process.env.MONGODB_CONNECTION_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: databaseName,
+    dbName: process.env.MONGOFB_DB_NAME,
   });
 
   db.on("error", (error) => {
-    console.error(chalk.bgRed(`MongoDB connection error: ${error.message}`));
+    db.close();
+    reject(
+      new Error(chalk.bgRed(`MongoDB connection error: ${error.message}`))
+    );
   });
-  db.once("open", () =>
-    console.log(chalk.green("Successfully connected to MongoDB."))
-  );
 
-  return db;
-}
+  db.once("open", () => {
+    resolve(console.log(chalk.green("Successfully connected to MongoDB.")));
+  });
+});
 
 export default connectToDatabase;

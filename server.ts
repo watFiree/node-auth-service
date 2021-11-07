@@ -3,8 +3,11 @@ import connectToDatabase from "./utils/connectToDatabase";
 
 const port = process.env.PORT || 8080;
 
-connectToDatabase("kodowanie");
+const initServer = () =>
+  connectToDatabase.then(() => {
+    app.listen(port, () => {
+      console.log(`Listening on port ${port}`);
+    });
+  });
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+initServer();
