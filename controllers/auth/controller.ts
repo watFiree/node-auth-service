@@ -8,7 +8,7 @@ import User from "../../models/User";
 export const authController = {
   register: async (req: C.RegisterRequest, res: Response) => {
     const { username, email, password } = req.body;
-    console.log(req.body);
+
     try {
       const hashedPassword = await hashPassword(password);
       const createdUser = await new User({

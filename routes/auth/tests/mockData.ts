@@ -1,4 +1,4 @@
-export const mockUsersCorrectInput = {
+export const mockedUserWithCorrectInput = {
   username: "test-username",
   email: "test@mail.com",
   password: "StrongP4ssw0rd",
