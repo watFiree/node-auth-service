@@ -8,16 +8,19 @@ export const createToken = async (
   data: object,
   type: "short" | "long" = "short"
 ) => {
-  const expiration = type === "short" ? "15m" : "200d";
+  const expiration = type === "short" ? "15m" : "1m";
   const token = await jwt.sign(data, JWT_SECRET, { expiresIn: expiration });
-  const { exp } = (await verifyToken(token)) as JwtPayload;
+  const { exp } = (await verifyJwtToken(token)) as JwtPayload;
 
   return { token, expiration: exp };
 };
 
-export const verifyToken = async (token: string) =>
-  (await jwt.verify(token, JWT_SECRET)) as JwtPayload;
+export const verifyJwtToken = async (token: string) => {
+  try {
+    return (await jwt.verify(token, JWT_SECRET)) as JwtPayload;
+  } catch (error) {
+    return error as Error;
+  }
+};
 
-export const decodeToken = async (token: string) => await jwt.decode(token);
-
-export default { createToken, verifyToken, decodeToken };
+export default { createToken, verifyJwtToken };

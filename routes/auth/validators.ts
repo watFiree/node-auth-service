@@ -6,8 +6,8 @@ export const isNewUserValid = [
   VC.isEmailValid(),
   VC.isPasswordValid(),
   VC.arePasswordsEqual(),
-  VC.isAlreadyInUse("username"),
-  VC.isAlreadyInUse("email"),
+  VC.isFieldAlreadyInUse("username"),
+  VC.isFieldAlreadyInUse("email"),
   resolveErrors,
 ];
 

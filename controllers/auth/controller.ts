@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createToken, verifyToken } from "../../utils/jwt";
+import { createToken, verifyJwtToken } from "../../utils/jwt";
 import { hashPassword } from "../../utils/hashPassword";
 import * as C from "./constants";
 import * as H from "./helpers";
@@ -48,7 +48,21 @@ export const authController = {
     const { username, email } = req.body;
     try {
       const user = await User.findOne({ email });
-      //TODO: check whether refreshToken is still valid and if not, update it
+
+      const verifiedRefreshToken = await verifyJwtToken(
+        await user.get("refreshToken")
+      );
+
+      if (verifiedRefreshToken instanceof Error) {
+        const newRefreshToken = await createToken(
+          { id: user.id, username, email },
+          "long"
+        );
+
+        user["refreshToken"] = newRefreshToken.token;
+        await user.save();
+      }
+
       const accessToken = await createToken({
         id: user.id,
         username,
@@ -69,19 +83,23 @@ export const authController = {
     }
   },
   silentRefresh: async (req: Request, res: Response) => {
-    const refreshTokenCookie = req.cookies["refresh_token"];
     const errorMessage = {
       message: "Could not authenticate user. Log in again.",
     };
 
+    const refreshTokenFromCookie = req.cookies["refresh_token"];
+    if (!refreshTokenFromCookie.length) {
+      return res.status(401).send(errorMessage);
+    }
+
     try {
-      const refreshToken = await verifyToken(refreshTokenCookie);
-      if (!refreshToken) {
+      const refreshToken = await verifyJwtToken(refreshTokenFromCookie);
+      if (refreshToken instanceof Error) {
         return res.status(401).send(errorMessage);
       }
 
       const user = await User.findById(refreshToken.id);
-      if (!user || refreshTokenCookie !== user.get("refreshToken")) {
+      if (refreshTokenFromCookie !== user.get("refreshToken")) {
         return res.status(401).send(errorMessage);
       }
 
