@@ -1,5 +1,5 @@
 import * as VC from "./validationChains";
-import { resolveErrors } from "../../validation/helpers";
+import { resolveErrors } from "validation/helpers";
 
 export const isNewUserValid = [
   VC.isUsernameValid(),

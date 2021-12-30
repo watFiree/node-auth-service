@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { createToken, verifyJwtToken } from "../../utils/jwt";
-import { hashPassword } from "../../utils/hashPassword";
+import { createToken, verifyJwtToken } from "utils/jwt";
+import { hashPassword } from "utils/hashPassword";
+import User from "models/User";
 import * as C from "./constants";
 import * as H from "./helpers";
-import User from "../../models/User";
 
 export const authController = {
   register: async (req: C.RegisterRequest, res: Response) => {

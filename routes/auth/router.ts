@@ -1,5 +1,5 @@
 import express from "express";
-import Controller from "../../controllers/auth";
+import Controller from "controllers/auth";
 import * as V from "./validators";
 
 const authRouter = express.Router();

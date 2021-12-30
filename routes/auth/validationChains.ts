@@ -1,6 +1,6 @@
 import { check } from "express-validator";
-import { comparePasswords } from "../../utils/hashPassword";
-import User from "../../models/User";
+import { comparePasswords } from "utils/hashPassword";
+import User from "models/User";
 
 export const isFieldAlreadyInUse = (fieldName: string, errorMessage?: string) =>
   check(fieldName).custom(async (value: string) => {
