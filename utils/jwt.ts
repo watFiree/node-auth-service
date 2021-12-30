@@ -8,7 +8,7 @@ export const createToken = async (
   data: object,
   type: "short" | "long" = "short"
 ) => {
-  const expiration = type === "short" ? "15m" : "1m";
+  const expiration = type === "short" ? "15m" : "200d";
   const token = await jwt.sign(data, JWT_SECRET, { expiresIn: expiration });
   const { exp } = (await verifyJwtToken(token)) as JwtPayload;
 
