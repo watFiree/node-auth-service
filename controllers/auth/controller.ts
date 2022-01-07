@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { createToken, verifyJwtToken } from "utils/jwt";
 import User from "models/User";
-import * as C from "./constants";
 import * as H from "./helpers";
+import * as C from "./constants";
 
 export const authController = {
   register: async (req: C.RegisterRequest, res: Response) => {
@@ -13,6 +13,7 @@ export const authController = {
         username,
         email,
         password,
+        refreshToken: "",
       });
 
       const accessToken = await createToken({
@@ -21,12 +22,6 @@ export const authController = {
         email,
       });
 
-      const refreshToken = await createToken(
-        { id: createdUser.id, username, email },
-        "long"
-      );
-
-      createdUser["refreshToken"] = refreshToken.token;
       await createdUser.save();
 
       const returnData = {
@@ -36,7 +31,9 @@ export const authController = {
 
       return res
         .status(201)
-        .cookie("refresh_token", refreshToken.token, { httpOnly: true })
+        .cookie("refresh_token", createdUser.get("refreshToken"), {
+          httpOnly: true,
+        })
         .send(returnData);
     } catch (error) {
       return res.status(500).send(error);
@@ -48,7 +45,7 @@ export const authController = {
       const user = await User.findOne({ email });
 
       const verifiedRefreshToken = await verifyJwtToken(
-        await user.get("refreshToken")
+        user.get("refreshToken")
       );
 
       if (verifiedRefreshToken instanceof Error) {
