@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { createToken, verifyJwtToken } from "utils/jwt";
-import { hashPassword } from "utils/hashPassword";
 import User from "models/User";
 import * as C from "./constants";
 import * as H from "./helpers";
@@ -10,11 +9,10 @@ export const authController = {
     const { username, email, password } = req.body;
 
     try {
-      const hashedPassword = await hashPassword(password);
       const createdUser = await new User({
         username,
         email,
-        password: hashedPassword,
+        password,
       });
 
       const accessToken = await createToken({

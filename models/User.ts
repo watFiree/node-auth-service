@@ -1,4 +1,6 @@
 import { Schema, model } from "mongoose";
+import { hashPassword } from "utils/hashPassword";
+import { UserSchemaInterface } from "./constants";
 
 const userSchema = new Schema(
   {
@@ -11,5 +13,11 @@ const userSchema = new Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre<UserSchemaInterface>("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const hashedPassword = await hashPassword(this.password);
+  this.password = hashedPassword;
+});
 
 export default model("User", userSchema, "users");
