@@ -8,7 +8,7 @@ const userSchema = new Schema(
     username: { type: String, trim: true, required: true },
     email: { type: String, trim: true, required: true },
     password: { type: String, required: true },
-    refreshToken: { type: String, required: true },
+    refreshToken: String,
   },
   {
     timestamps: true,

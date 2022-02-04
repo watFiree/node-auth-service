@@ -13,7 +13,6 @@ export const authController = {
         username,
         email,
         password,
-        refreshToken: "",
       });
 
       const accessToken = await createToken({
