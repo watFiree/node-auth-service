@@ -2,7 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testTimeout: 20000,
+  testTimeout: 5000,
   roots: ["./"],
   modulePaths: ["./"],
   moduleDirectories: ["node_modules"],
